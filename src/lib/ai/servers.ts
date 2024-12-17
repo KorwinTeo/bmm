@@ -9,7 +9,7 @@ import { commonFetch } from './utils'
  *
  * 可参考下面 coze() 和 openai() 的示例，自行接入其他 AI 服务
  */
-export const getServer = coze
+export const getServer = openai
 
 /**
  * 扣子 AI
