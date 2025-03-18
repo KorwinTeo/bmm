@@ -1,7 +1,9 @@
-import { SelectPublicTag, db, publicTagToTag, publicTags } from '@/db'
+import { SelectPublicTag, db, schema } from '@/db'
 import { and, eq, inArray, notInArray } from 'drizzle-orm'
 import { afterAll, assert, beforeAll, describe, expect, test } from 'vitest'
 import { batchCreateTags } from './utils'
+
+const { publicTagToTag, publicTags } = schema
 
 describe('publicTagToTag CRUD', () => {
   let tags: SelectPublicTag[] = []
@@ -27,7 +29,7 @@ describe('publicTagToTag CRUD', () => {
       if (tag.id === id1) continue
       values.push({ a: id1, b: tag.id })
     }
-    const res = await db.insert(publicTagToTag).values(values)
+    const res = await db.insert(publicTagToTag).values(values).returning()
     console.log({ res })
     expect(res.length).toBe(tags.length - 1)
   })

@@ -1,6 +1,7 @@
 import { SelectPublicTag } from '@/db'
-import { WEBSITE_NAME } from '@cfg'
+import { type ClassValue, clsx } from 'clsx'
 import { pinyin } from 'pinyin-pro'
+import { twMerge } from 'tailwind-merge'
 
 export function isValidUrl(url?: string) {
   try {
@@ -109,13 +110,13 @@ export function getPinyin(word: string) {
   return pinyin(word, { toneType: 'none', nonZh: 'consecutive' })
 }
 
-export function mergeWebsiteTitle(title: string) {
-  return title + ' | ' + WEBSITE_NAME
-}
-
 /**
  * 是否为 serverless 运行环境
  */
 export function isServerless() {
   return process.env.SERVERLESS || process.env.VERCEL
+}
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs))
 }

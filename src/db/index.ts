@@ -10,17 +10,15 @@
  */
 
 // import { db } from './mysql/drivers/mysql2'
-// import * as schema from './mysql/schemas'
+import { db as pgDb } from './postgres/drivers/postgres'
+import { db as sqliteDb } from './sqlite/drivers/libsql'
 
-// import {db} from './sqlite/drivers/better-sqlite3'
-// import * as schema from './sqlite/schemas'
+const db = (process.env.DB_DRIVER === 'sqlite' ? sqliteDb : pgDb) as DB_DRIVER extends 'sqlite'
+  ? typeof sqliteDb
+  : typeof pgDb
+const schema = db._.fullSchema
 
-import { db, pgSql } from './postgres/drivers/postgres'
-import * as schema from './postgres/schemas'
-
-export { db, pgSql, schema }
-
-export const { publicBookmarks, publicTags, publicBookmarkToTag, publicTagToTag } = schema
+export { db, schema }
 
 export type InsertPublicTag = typeof schema.publicTags.$inferInsert
 export type SelectPublicTag = typeof schema.publicTags.$inferSelect

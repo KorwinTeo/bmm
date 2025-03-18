@@ -1,8 +1,8 @@
 import { useGlobalContext } from '@/app/ctx'
 import { SelectPublicTag } from '@/controllers/PublicTag.controller'
 import { testTagNameOrPinyin } from '@/utils'
+import { Chip, cn, ScrollShadow } from '@heroui/react'
 import { Icon } from '@iconify/react'
-import { Chip, cn, ScrollShadow } from '@nextui-org/react'
 import { useSetState, useThrottleFn } from 'ahooks'
 import RcSelect from 'rc-select'
 import 'rc-select/assets/index.css'
@@ -74,7 +74,7 @@ export default function TagSelect(props: Props) {
     <div role="tag-select">
       <div
         className={cn(
-          'relative cursor-not-allowed overflow-hidden rounded-medium bg-default-50 p-4 py-3 text-center text-sm text-warning-300',
+          'relative cursor-not-allowed overflow-hidden rounded-medium bg-default-50 p-4 py-3 text-center text-sm text-warning-400/80',
           tags.length && 'hidden'
         )}
       >

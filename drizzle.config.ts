@@ -1,39 +1,47 @@
-// https://orm.drizzle.team/kit-docs/config-reference
-
 import { defineConfig } from 'drizzle-kit'
-
-// loadEnvConfig(process.cwd(), true)
 
 if (!process.env.DB_CONNECTION_URL) {
   throw new Error('请配置数据库连接')
 }
 
+/**
+ * drizzle orm 配置
+ * @link https://orm.drizzle.team/docs/drizzle-config-file
+ */
 export default defineConfig(
   (() => {
+    const folderAlias: Record<typeof process.env.DB_DRIVER, string> = {
+      postgresql: 'postgres',
+      sqlite: 'sqlite',
+      // mysql: 'mysql',
+    }
+    // 指定 Schema 文件或文件夹路径
+    const schema = `./src/db/${folderAlias[process.env.DB_DRIVER]}/schemas/*`
+    // 执行数据库迁移时，将会在这个目录中生成一些迁移 SQL 和其他记录数据的文件
+    const out = `./src/db/${folderAlias[process.env.DB_DRIVER]}/migrations/${process.env.NODE_ENV}`
+    if (process.env.DB_DRIVER === 'postgresql') {
+      return {
+        schema,
+        out,
+        dialect: 'postgresql',
+        dbCredentials: { url: process.env.DB_CONNECTION_URL },
+      }
+    }
+    if (process.env.DB_CONNECTION_URL.startsWith('libsql://')) {
+      return {
+        schema,
+        out,
+        dialect: 'turso',
+        dbCredentials: {
+          url: process.env.DB_CONNECTION_URL,
+          authToken: process.env.DB_AUTH_TOKEN,
+        },
+      }
+    }
     return {
-      // 指定 Schema 文件或文件夹路径
-      schema: './src/db/postgres/schemas/*',
-      // 执行数据库迁移时，将会在这个目录中生成一些迁移 SQL 和其他记录数据的文件
-      out: './src/db/postgres/migrations/' + process.env.NODE_ENV,
-
-      // For 「SQLite + Turso」
-      // dialect: 'sqlite',
-      // driver: 'turso',
-      // dbCredentials: {
-      //   url: process.env.TURSO_DATABASE_URL!,
-      //   authToken: process.env.TURSO_AUTH_TOKEN,
-      // },
-
-      // For 「SQLite + better-sqlite3」
-      // dialect: 'sqlite',
-      // dbCredentials: { url: LOCAL_SQLITE_DB },
-
-      // For 「MySQL + mysql2」
-      // dialect: 'mysql',
-      // dbCredentials: { url: process.env.DB_CONNECTION_URL },
-
-      // For 「Postgres」
-      dialect: 'postgresql',
+      schema,
+      out,
+      dialect: 'sqlite',
       dbCredentials: { url: process.env.DB_CONNECTION_URL },
     }
   })()

@@ -1,13 +1,12 @@
-// 请先安装相关依赖
-// import { createClient } from '@libsql/client'
-// import { drizzle } from 'drizzle-orm/libsql'
-// import * as schema from '../schemas'
+import { drizzle } from 'drizzle-orm/libsql'
+import * as schema from '../schemas'
 
-// const tursoClient = createClient({
-//   url: process.env.TURSO_DATABASE_URL!,
-//   authToken: process.env.TURSO_AUTH_TOKEN,
-// })
-
-// const drizzleDb = drizzle(tursoClient, { schema })
-
-// export { drizzleDb, tursoClient }
+export const db = drizzle({
+  // libSQL 会立即连接数据库，当 DB_DRIVER != 'sqlite' 时，使用 DB_CONNECTION_URL 连接可能报错，如 'postgres://xxx'
+  // 这里使用 ':memory:' 规避这一可能的报错
+  connection: {
+    url: process.env.DB_DRIVER !== 'sqlite' ? ':memory:' : process.env.DB_CONNECTION_URL,
+    authToken: process.env.DB_AUTH_TOKEN,
+  },
+  schema,
+})

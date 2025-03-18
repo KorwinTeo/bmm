@@ -3,6 +3,9 @@
 /** 网站名称 */
 export const WEBSITE_NAME = 'NavTree'
 
+export const WEBSITE_KEYWORDS =
+  '开源书签管理, AI整理书签, 开发者工具, 网页收藏神器, 跨平台书签同步, 优质网站导航, 书签云管理'
+
 export const IS_DEV = process.env.NODE_ENV === 'development'
 
 export const Background = {
@@ -51,6 +54,7 @@ export const PageRoutes = {
     bookmarkSlug: (slug: 'new' | number) => '/admin/bookmark/' + slug,
   },
   Public: {
+    RANDOM: '/random',
     SEARCH: '/search',
     search: (ky: string) => '/search?keyword=' + ky,
   },
@@ -75,6 +79,7 @@ export const IconNames = {
   SORT_ASC: 'icon-[tabler--sort-ascending]',
   SORT_DESC: 'icon-[tabler--sort-descending]',
   STARS: 'icon-[mdi--stars]',
+  SIEVE: 'icon-[tabler--dice-3]', // 筛子
   SUN: 'icon-[tabler--sun]',
   TAG: 'icon-[tabler--tag]',
   TRASH: 'icon-[tabler--trash]',
@@ -96,3 +101,6 @@ export const Assets = {
 export const ExternalLinks = {
   REPO: 'https://github.com/y80/bmm',
 } as const
+
+/** 默认情况下每页获取的书签个数；出于栅格布局的考虑这里选用 24 */
+export const DEFAULT_BOOKMARK_PAGESIZE = 24

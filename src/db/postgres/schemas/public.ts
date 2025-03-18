@@ -40,9 +40,7 @@ export const publicTagToTag = pgTable(
       .notNull()
       .references(() => publicTags.id, { onDelete: 'cascade' }),
   },
-  (table) => {
-    return { pk: primaryKey({ columns: [table.a, table.b] }) }
-  }
+  (table) => [primaryKey({ columns: [table.a, table.b] })]
 )
 
 export const publicTagToTagRelations = relations(publicTagToTag, (ctx) => {
@@ -67,6 +65,7 @@ export const publicBookmarks = pgTable('publicBookmarks', {
   icon: varchar('icon', { length: 255 }),
   pinyin: varchar('pinyin', { length: 255 }),
   description: varchar('description', { length: 255 }),
+  isPinned: boolean('isPinned'),
   createdAt: timestamp('createdAt', { mode: 'date' }).$defaultFn(() => new Date()),
   updatedAt: timestamp('updatedAt', { mode: 'date' }).$defaultFn(() => new Date()),
 })
@@ -87,9 +86,7 @@ export const publicBookmarkToTag = pgTable(
       .notNull()
       .references(() => publicTags.id, { onDelete: 'cascade' }),
   },
-  (table) => {
-    return { pk: primaryKey({ columns: [table.bId, table.tId] }) }
-  }
+  (table) => [primaryKey({ columns: [table.bId, table.tId] })]
 )
 
 export const publicBookmarkToTagRelations = relations(publicBookmarkToTag, (ctx) => {

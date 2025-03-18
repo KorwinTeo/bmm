@@ -1,5 +1,7 @@
-import { InsertPublicTag, db, publicTags } from '@/db'
+import { InsertPublicTag, db, schema } from '@/db'
 import { faker } from '@faker-js/faker'
+
+const { publicTags } = schema
 
 export function mockTag() {
   const tag: InsertPublicTag = {
@@ -7,6 +9,7 @@ export function mockTag() {
     icon: 'tabler:search',
     color: faker.color.rgb(),
     isMain: Boolean(faker.number.int({ max: 1 })),
+    pinyin: 'pinyin',
   }
   return tag
 }
