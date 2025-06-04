@@ -5,6 +5,8 @@
 
 
 FROM node:20-alpine AS base
+COPY package.json .
+RUN corepack enable && pnpm -v
 
 
 FROM base AS deps
@@ -12,17 +14,16 @@ RUN apk add --no-cache libc6-compat
 WORKDIR /app
 COPY package.json pnpm-lock.yaml .npmrc .
 
-RUN corepack enable && pnpm install --frozen-lockfile
+RUN pnpm install --frozen-lockfile
 
 
 FROM base AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-RUN corepack enable && pnpm run build && pnpm prune --prod
+RUN pnpm next build && pnpm prune --prod
 # 清理一些体积较大的、运行时不需要的文件
 RUN rm -rf doc .next/cache .next/trace \
-node_modules/.pnpm/@libsql+linux-arm64-gnu@* \
 node_modules/.pnpm/@types+* \
 node_modules/.pnpm/caniuse* \
 node_modules/.pnpm/@ant-design+icons* \
@@ -37,7 +38,8 @@ WORKDIR /app
 ENV NODE_ENV=production
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
-RUN apk add bash && corepack enable && pnpm -v
+# zx 依赖 bash
+RUN apk add bash
 COPY --from=builder /app .
 
 EXPOSE 3000
